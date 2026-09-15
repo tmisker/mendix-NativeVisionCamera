@@ -1,6 +1,7 @@
 import { ReactElement, createElement, useState, useEffect, Fragment } from "react";
 import { TextStyle, ViewStyle } from "react-native";
 import { Camera, CameraPermissionStatus } from "react-native-vision-camera";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { Style } from "@mendix/pluggable-widgets-tools";
 
@@ -25,5 +26,10 @@ export function NativeVisionCamera(props: NativeVisionCameraProps<CustomStyle>):
         return <Fragment></Fragment>;
     }
 
-    return <CameraPage mediaPath={props.mediaPath} onCaptureAction={props.onCaptureAction} />;
+    // Own provider so the safe area insets are available even if the host app does not render one
+    return (
+        <SafeAreaProvider>
+            <CameraPage mediaPath={props.mediaPath} onCaptureAction={props.onCaptureAction} />
+        </SafeAreaProvider>
+    );
 }

@@ -1,18 +1,19 @@
 import React, { createElement } from "react";
 import { Platform, StyleSheet } from "react-native";
-import StaticSafeAreaInsets from "react-native-static-safe-area-insets";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BlurView, BlurViewProps } from "@react-native-community/blur";
 
 const FALLBACK_COLOR = "rgba(140, 140, 140, 0.3)";
 
 const StatusBarBlurBackgroundImpl = ({ style, ...props }: BlurViewProps): React.ReactElement | null => {
+    const insets = useSafeAreaInsets();
     if (Platform.OS !== "ios") {
         return null;
     }
 
     return (
         <BlurView
-            style={[styles.statusBarBackground, style]}
+            style={[styles.statusBarBackground, { height: insets.top }, style]}
             blurAmount={25}
             blurType="light"
             reducedTransparencyFallbackColor={FALLBACK_COLOR}
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 0,
         left: 0,
-        right: 0,
-        height: StaticSafeAreaInsets.safeAreaInsetsTop
+        right: 0
     }
 });

@@ -1,5 +1,6 @@
 import React, { createElement, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ActionValue, DynamicValue, EditableValue, ValueStatus } from "mendix";
 import {
     Camera,
@@ -13,7 +14,7 @@ import {
     useLocationPermission,
     Orientation
 } from "react-native-vision-camera";
-import { CONTENT_SPACING, SAFE_AREA_PADDING, BUTTON_SIZE, BUTTON_ICON_SIZE, CAPTURE_BUTTON_SIZE } from "../Constants";
+import { CONTENT_SPACING, getSafeAreaPadding, BUTTON_SIZE, BUTTON_ICON_SIZE, CAPTURE_BUTTON_SIZE } from "../Constants";
 import { useIsForeground } from "../hooks/useIsForeground";
 import { useIsFocused } from "@react-navigation/core";
 import { usePreferredCameraDevice } from "../hooks/usePreferredCameraDevice";
@@ -40,6 +41,8 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
     const camera = useRef<Camera>(null);
     const location = useLocationPermission();
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const insets = useSafeAreaInsets();
+    const safeAreaPadding = getSafeAreaPadding(insets);
     const zoom = { value: 1.0 };
 
     // check if camera page is active
@@ -156,15 +159,19 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
 
     const photoHdr = format?.supportsPhotoHdr && enableHdr;
 
-    const dynamicStyles =
-        orientation === "landscape"
-            ? StyleSheet.create({
-                  captureButtonRing: {
-                      alignSelf: "flex-end",
-                      right: SAFE_AREA_PADDING.paddingBottom
-                  }
-              })
-            : StyleSheet.create({ captureButtonRing: {} });
+    // Positions that depend on the safe area insets, which can change at runtime (rotation, edge-to-edge)
+    const dynamicStyles = {
+        captureButtonRing: {
+            bottom: safeAreaPadding.paddingBottom,
+            ...(orientation === "landscape"
+                ? { alignSelf: "flex-end" as const, right: safeAreaPadding.paddingBottom }
+                : {})
+        },
+        rightButtonRow: {
+            right: safeAreaPadding.paddingRight,
+            top: safeAreaPadding.paddingTop
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -207,7 +214,7 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
 
             <StatusBarBlurBackground />
 
-            <View style={styles.rightButtonRow}>
+            <View style={[styles.rightButtonRow, dynamicStyles.rightButtonRow]}>
                 {supportsCameraFlipping && (
                     <TouchableOpacity style={styles.button} onPress={onFlipCameraPressed}>
                         <Icon path={mdiCameraFlipOutline} size={BUTTON_ICON_SIZE} />
@@ -253,7 +260,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         position: "absolute",
         alignSelf: "center",
-        bottom: SAFE_AREA_PADDING.paddingBottom,
         padding: 2,
         width: CAPTURE_BUTTON_SIZE,
         height: CAPTURE_BUTTON_SIZE,
@@ -276,9 +282,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     rightButtonRow: {
-        position: "absolute",
-        right: SAFE_AREA_PADDING.paddingRight,
-        top: SAFE_AREA_PADDING.paddingTop
+        position: "absolute"
     },
     text: {
         color: "white",
