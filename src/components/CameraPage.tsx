@@ -17,7 +17,6 @@ import {
 import { CONTENT_SPACING, getSafeAreaPadding, BUTTON_SIZE, BUTTON_ICON_SIZE, CAPTURE_BUTTON_SIZE } from "../Constants";
 import { useIsForeground } from "../hooks/useIsForeground";
 import { useIsFocused } from "@react-navigation/core";
-import { usePreferredCameraDevice } from "../hooks/usePreferredCameraDevice";
 import { StatusBarBlurBackground } from "./StatusBarBlurBackground";
 import { mdiCameraFlipOutline, mdiFlash, mdiFlashOff, mdiHdr, mdiHdrOff, mdiMoonWaningCrescent } from "@mdi/js";
 import { Icon } from "./Icon";
@@ -68,14 +67,8 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
         }
     };
 
-    // camera device settings
-    const [preferredDevice] = usePreferredCameraDevice();
-    let device = useCameraDevice(cameraPosition);
-
-    if (preferredDevice != null && preferredDevice.position === cameraPosition) {
-        // override default device with the one selected by the user in settings
-        device = preferredDevice;
-    }
+    // camera device
+    const device = useCameraDevice(cameraPosition);
     const [targetFps, setTargetFps] = useState(60);
     // Always use max/min so the ratio is >= 1, matching landscape camera sensor formats (e.g. 16:9 = 1.77)
     const screenAspectRatio = Math.max(windowHeight, windowWidth) / Math.min(windowHeight, windowWidth);
