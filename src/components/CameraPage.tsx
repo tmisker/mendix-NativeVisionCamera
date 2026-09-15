@@ -18,8 +18,8 @@ import { useIsForeground } from "../hooks/useIsForeground";
 import { useIsFocused } from "@react-navigation/core";
 import { usePreferredCameraDevice } from "../hooks/usePreferredCameraDevice";
 import { StatusBarBlurBackground } from "./StatusBarBlurBackground";
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import IonIcon from "react-native-vector-icons/Ionicons";
+import { mdiCameraFlipOutline, mdiFlash, mdiFlashOff, mdiHdr, mdiHdrOff, mdiMoonWaningCrescent } from "@mdi/js";
+import { Icon } from "./Icon";
 
 type CameraPageProps = {
     mediaPath: EditableValue<string>;
@@ -210,12 +210,12 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
             <View style={styles.rightButtonRow}>
                 {supportsCameraFlipping && (
                     <TouchableOpacity style={styles.button} onPress={onFlipCameraPressed}>
-                        <IonIcon name="camera-reverse" color="white" size={BUTTON_ICON_SIZE} />
+                        <Icon path={mdiCameraFlipOutline} size={BUTTON_ICON_SIZE} />
                     </TouchableOpacity>
                 )}
                 {supportsFlash && (
                     <TouchableOpacity style={styles.button} onPress={onFlashPressed}>
-                        <IonIcon name={flash === "on" ? "flash" : "flash-off"} color="white" size={BUTTON_ICON_SIZE} />
+                        <Icon path={flash === "on" ? mdiFlash : mdiFlashOff} size={BUTTON_ICON_SIZE} />
                     </TouchableOpacity>
                 )}
                 {supports60Fps && (
@@ -225,16 +225,12 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
                 )}
                 {supportsHdr && (
                     <TouchableOpacity style={styles.button} onPress={() => setEnableHdr(h => !h)}>
-                        <MaterialIcon name={enableHdr ? "hdr" : "hdr-off"} color="white" size={BUTTON_ICON_SIZE} />
+                        <Icon path={enableHdr ? mdiHdr : mdiHdrOff} size={BUTTON_ICON_SIZE} />
                     </TouchableOpacity>
                 )}
                 {canToggleNightMode && (
                     <TouchableOpacity style={styles.button} onPress={() => setEnableNightMode(!enableNightMode)}>
-                        <IonIcon
-                            name={enableNightMode ? "moon" : "moon-outline"}
-                            color="white"
-                            size={BUTTON_ICON_SIZE}
-                        />
+                        <Icon path={mdiMoonWaningCrescent} outline={!enableNightMode} size={BUTTON_ICON_SIZE} />
                     </TouchableOpacity>
                 )}
             </View>
