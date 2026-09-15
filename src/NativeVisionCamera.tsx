@@ -29,7 +29,11 @@ export function NativeVisionCamera(props: NativeVisionCameraProps<CustomStyle>):
     // Own provider so the safe area insets are available even if the host app does not render one
     return (
         <SafeAreaProvider>
-            <CameraPage mediaPath={props.mediaPath} onCaptureAction={props.onCaptureAction} />
+            <CameraPage
+                mediaPath={props.mediaPath}
+                onCaptureAction={props.onCaptureAction}
+                outputOrientation={props.outputOrientation}
+            />
         </SafeAreaProvider>
     );
 }

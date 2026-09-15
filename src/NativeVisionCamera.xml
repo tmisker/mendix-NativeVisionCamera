@@ -19,6 +19,14 @@
                 <caption>Capture action</caption>
                 <description>Logic for handling the captured media.</description>
             </property>
+            <property key="outputOrientation" type="enumeration" defaultValue="device">
+                <caption>Photo orientation</caption>
+                <description>Device: follow the physical orientation of the device (sensors), even when the app is locked to one orientation. Preview: use the orientation of the camera preview, so the photo always matches what the user sees. Choose Preview for apps that are locked to landscape or portrait.</description>
+                <enumerationValues>
+                    <enumerationValue key="device">Device</enumerationValue>
+                    <enumerationValue key="preview">Preview</enumerationValue>
+                </enumerationValues>
+            </property>
         </propertyGroup>
     </properties>
 </widget>

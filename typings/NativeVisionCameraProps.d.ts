@@ -6,11 +6,14 @@
 import { CSSProperties } from "react";
 import { ActionValue, EditableValue } from "mendix";
 
+export type OutputOrientationEnum = "device" | "preview";
+
 export interface NativeVisionCameraProps<Style> {
     name: string;
     style: Style[];
     mediaPath: EditableValue<string>;
     onCaptureAction?: ActionValue;
+    outputOrientation: OutputOrientationEnum;
 }
 
 export interface NativeVisionCameraPreviewProps {
@@ -26,4 +29,5 @@ export interface NativeVisionCameraPreviewProps {
     translate: (text: string) => string;
     mediaPath: string;
     onCaptureAction: {} | null;
+    outputOrientation: OutputOrientationEnum;
 }

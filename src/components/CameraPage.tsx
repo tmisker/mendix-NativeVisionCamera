@@ -12,7 +12,8 @@ import {
     TakePhotoOptions,
     TakeSnapshotOptions,
     useLocationPermission,
-    Orientation
+    Orientation,
+    OutputOrientation
 } from "react-native-vision-camera";
 import { CONTENT_SPACING, getSafeAreaPadding, BUTTON_SIZE, BUTTON_ICON_SIZE, CAPTURE_BUTTON_SIZE } from "../Constants";
 import { useIsForeground } from "../hooks/useIsForeground";
@@ -24,6 +25,7 @@ import { Icon } from "./Icon";
 type CameraPageProps = {
     mediaPath: EditableValue<string>;
     onCaptureAction?: ActionValue;
+    outputOrientation: OutputOrientation;
 };
 
 export const executeAction = (action?: ActionValue): void => {
@@ -36,7 +38,7 @@ export const isAvailable = (property: DynamicValue<any> | EditableValue<any>): b
     return property && property.status === ValueStatus.Available && property.value;
 };
 
-export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): React.ReactElement {
+export function CameraPage({ mediaPath, onCaptureAction, outputOrientation }: CameraPageProps): React.ReactElement {
     const camera = useRef<Camera>(null);
     const location = useLocationPermission();
     const { width: windowWidth, height: windowHeight } = useWindowDimensions();
@@ -192,7 +194,7 @@ export function CameraPage({ mediaPath, onCaptureAction }: CameraPageProps): Rea
                         console.debug(`Preview orientation changed to ${o}!`);
                         determineAndSetOrientation(o);
                     }}
-                    outputOrientation="device"
+                    outputOrientation={outputOrientation}
                     photo
                     photoHdr={photoHdr}
                     video={false}
