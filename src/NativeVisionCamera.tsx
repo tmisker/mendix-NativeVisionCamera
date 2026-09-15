@@ -25,8 +25,5 @@ export function NativeVisionCamera(props: NativeVisionCameraProps<CustomStyle>):
         return <Fragment></Fragment>;
     }
 
-    return <CameraPage
-                mediaPath={props.mediaPath}
-                onCaptureAction={props.onCaptureAction}
-            />;
+    return <CameraPage mediaPath={props.mediaPath} onCaptureAction={props.onCaptureAction} />;
 }
